@@ -16,6 +16,7 @@ export interface Market {
   location: string;
   cropPrices: Record<string, number>;
   gain?: number;
+  coordinates: { x: number; y: number };
 }
 
 export interface WeatherData {
@@ -30,4 +31,6 @@ export interface PriceHistory {
   day: string;
   price: number;
   demand: number;
+  demandRangeHigh?: number;
+  demandRangeLow?: number;
 }

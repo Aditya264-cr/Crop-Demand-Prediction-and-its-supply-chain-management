@@ -10,10 +10,21 @@ import { cn } from '../lib/utils';
 
 interface HomeProps {
   onNavigate: (tab: string) => void;
+  onSelectCrop: (cropId: string) => void;
 }
 
-export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
-  const [aiInsight, setAiInsight] = useState<string>("Analyzing market trends...");
+export const Home: React.FC<HomeProps> = ({ onNavigate, onSelectCrop }) => {
+  const [aiInsight, setAiInsight] = useState<{
+    summary: string;
+    weatherFactor: string;
+    demandFactor: string;
+    actionableTip: string;
+  }>({
+    summary: "Analyzing market trends...",
+    weatherFactor: "Checking weather...",
+    demandFactor: "Evaluating demand...",
+    actionableTip: "Please wait..."
+  });
 
   useEffect(() => {
     const fetchInsight = async () => {
@@ -65,7 +76,10 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
                 AgriSense AI Recommendation
               </div>
               <p className="text-lg font-bold text-gray-800 leading-relaxed">
-                "{aiInsight}"
+                "{aiInsight.summary}"
+              </p>
+              <p className="text-xs text-green-600 font-bold mt-2 flex items-center gap-1">
+                <ArrowRight size={12} /> {aiInsight.actionableTip}
               </p>
             </div>
           </div>
@@ -108,7 +122,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {CROPS.slice(0, 4).map((crop) => (
-                <MarketCard key={crop.id} crop={crop} onClick={() => onNavigate('market')} />
+                <MarketCard key={crop.id} crop={crop} onClick={() => onSelectCrop(crop.id)} />
               ))}
             </div>
           </div>

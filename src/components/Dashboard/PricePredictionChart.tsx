@@ -15,7 +15,19 @@ export const PricePredictionChart: React.FC<PricePredictionChartProps> = ({ data
           <h2 className="text-xl font-black text-gray-900">Price Prediction Model</h2>
           <p className="text-sm text-gray-500 font-medium">AI-driven forecasting for {cropName}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-green-600"></div>
+            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Price</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-blue-500 border-2 border-white border-dashed"></div>
+            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Demand Forecast</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-sm bg-blue-100"></div>
+            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">AI Confidence Range</span>
+          </div>
           <select className="bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold px-4 py-2 outline-none focus:ring-2 focus:ring-green-500 transition-all">
             <option>Next 7 Days</option>
             <option>Next 30 Days</option>
@@ -54,6 +66,14 @@ export const PricePredictionChart: React.FC<PricePredictionChartProps> = ({ data
               }}
               itemStyle={{ fontWeight: 700, fontSize: '12px' }}
               labelStyle={{ fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}
+              formatter={(value: any, name: string, props: any) => {
+                if (name === 'demand') {
+                  const { demandRangeLow, demandRangeHigh } = props.payload;
+                  return [`${value} (Range: ${demandRangeLow}-${demandRangeHigh})`, 'Demand'];
+                }
+                if (name === 'price') return [`₹${value}`, 'Price'];
+                return [value, name];
+              }}
             />
             <Area 
               type="monotone" 
@@ -63,6 +83,14 @@ export const PricePredictionChart: React.FC<PricePredictionChartProps> = ({ data
               fill="url(#colorPrice)" 
               strokeWidth={4}
               animationDuration={1500}
+            />
+            <Area
+              type="monotone"
+              dataKey={(d: any) => [d.demandRangeLow, d.demandRangeHigh]}
+              stroke="none"
+              fill="#3b82f6"
+              fillOpacity={0.1}
+              animationDuration={2000}
             />
             <Area 
               type="monotone" 
