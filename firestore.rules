@@ -1,0 +1,94 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: crops
+// Document ID: cropId
+// Fields:
+//   - name: string (required)
+//   - currentPrice: number (required)
+//   - priceChange: number
+//   - demandIndex: number (required, 0-100)
+//   - trend: string (up/down/stable)
+//   - prediction: string
+//   - harvestTime: string
+//   - lastUpdated: timestamp
+//
+// Collection: markets
+// Document ID: marketId
+// Fields:
+//   - name: string (required)
+//   - distance: number (required)
+//   - location: string
+//   - cropPrices: map
+//
+// Collection: weather_logs
+// Document ID: logId
+// Fields:
+//   - timestamp: timestamp
+//   - temp: number
+//   - humidity: number
+//   - condition: string
+//   - alert: string
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "patiladiv236@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidCrop(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.currentPrice is number && data.currentPrice >= 0 &&
+             data.demandIndex is number && data.demandIndex >= 0 && data.demandIndex <= 100;
+    }
+
+    function isValidMarket(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.distance is number && data.distance >= 0;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /crops/{cropId} {
+      allow read: if true; // Explicitly requested "No authentication required (for now)"
+      allow create, update: if isAdmin() && isValidCrop(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /markets/{marketId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidMarket(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /weather_logs/{logId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId && request.resource.data.role == 'user';
+      allow update: if isAuthenticated() && request.auth.uid == userId && request.resource.data.role == resource.data.role;
+      allow delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Crop": {
+      "title": "Crop",
+      "description": "Represents a crop with market data and predictions.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the crop" },
+        "currentPrice": { "type": "number", "description": "Current market price per quintal" },
+        "priceChange": { "type": "number", "description": "Percentage change in price" },
+        "demandIndex": { "type": "number", "description": "Demand index from 0 to 100" },
+        "trend": { "type": "string", "enum": ["up", "down", "stable"], "description": "Current price trend" },
+        "prediction": { "type": "string", "description": "AI recommendation (Buy/Hold/Sell)" },
+        "harvestTime": { "type": "string", "description": "Estimated time to harvest" },
+        "lastUpdated": { "type": "string", "format": "date-time", "description": "Last update timestamp" }
+      },
+      "required": ["name", "currentPrice", "demandIndex"]
+    },
+    "Market": {
+      "title": "Market",
+      "description": "Represents a local market or mandi.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the market" },
+        "location": { "type": "string", "description": "Geographic location" },
+        "distance": { "type": "number", "description": "Distance from the user's farm in km" },
+        "cropPrices": {
+          "type": "object",
+          "description": "Map of crop names to their current prices in this market"
+        }
+      },
+      "required": ["name", "distance"]
+    },
+    "WeatherLog": {
+      "title": "WeatherLog",
+      "description": "Historical and forecasted weather data.",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string", "format": "date-time" },
+        "temp": { "type": "number" },
+        "humidity": { "type": "number" },
+        "condition": { "type": "string" },
+        "alert": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/crops": {
+      "schema": "Crop",
+      "description": "Collection of available crops and their market status."
+    },
+    "/markets": {
+      "schema": "Market",
+      "description": "Collection of nearby markets and mandis."
+    },
+    "/weather_logs": {
+      "schema": "WeatherLog",
+      "description": "Logs of weather data for the region."
+    }
+  }
+}
