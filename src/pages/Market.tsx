@@ -1,15 +1,15 @@
 import React from 'react';
 import { Search, Filter, ArrowRight, TrendingUp, TrendingDown } from 'lucide-react';
 import { MarketCard } from '../components/Dashboard/MarketCard';
-import { CROPS } from '../data/mockData';
 import { Crop } from '../types';
 import { cn } from '../lib/utils';
 
 interface MarketProps {
   onSelectCrop: (cropId: string) => void;
+  crops: Crop[];
 }
 
-export const Market: React.FC<MarketProps> = ({ onSelectCrop }) => {
+export const Market: React.FC<MarketProps> = ({ onSelectCrop, crops }) => {
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -34,7 +34,7 @@ export const Market: React.FC<MarketProps> = ({ onSelectCrop }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {CROPS.map((crop) => (
+        {crops.map((crop) => (
           <MarketCard 
             key={crop.id} 
             crop={crop} 
@@ -49,27 +49,31 @@ export const Market: React.FC<MarketProps> = ({ onSelectCrop }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="p-6 bg-green-50 rounded-2xl border border-green-100">
             <p className="text-[10px] font-black text-green-700 uppercase tracking-widest mb-2">Top Gainer</p>
-            <p className="text-xl font-black text-gray-900">Soybean</p>
+            <p className="text-xl font-black text-gray-900">{[...crops].sort((a, b) => b.priceChange - a.priceChange)[0].name}</p>
             <p className="text-sm font-bold text-green-600 flex items-center gap-1 mt-1">
-              <TrendingUp size={14} /> +5.4%
+              <TrendingUp size={14} /> +{[...crops].sort((a, b) => b.priceChange - a.priceChange)[0].priceChange}%
             </p>
           </div>
           <div className="p-6 bg-red-50 rounded-2xl border border-red-100">
             <p className="text-[10px] font-black text-red-700 uppercase tracking-widest mb-2">Top Loser</p>
-            <p className="text-xl font-black text-gray-900">Rice (Basmati)</p>
+            <p className="text-xl font-black text-gray-900">{[...crops].sort((a, b) => a.priceChange - b.priceChange)[0].name}</p>
             <p className="text-sm font-bold text-red-600 flex items-center gap-1 mt-1">
-              <TrendingDown size={14} /> -1.2%
+              <TrendingDown size={14} /> {[...crops].sort((a, b) => a.priceChange - b.priceChange)[0].priceChange}%
             </p>
           </div>
           <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100">
             <p className="text-[10px] font-black text-blue-700 uppercase tracking-widest mb-2">Highest Demand</p>
-            <p className="text-xl font-black text-gray-900">Rice (Basmati)</p>
-            <p className="text-sm font-bold text-blue-600 mt-1">92 Index</p>
+            <p className="text-xl font-black text-gray-900">{[...crops].sort((a, b) => b.demandIndex - a.demandIndex)[0].name}</p>
+            <p className="text-sm font-bold text-blue-600 mt-1">{[...crops].sort((a, b) => b.demandIndex - a.demandIndex)[0].demandIndex} Index</p>
           </div>
           <div className="p-6 bg-orange-50 rounded-2xl border border-orange-100">
             <p className="text-[10px] font-black text-orange-700 uppercase tracking-widest mb-2">Market Sentiment</p>
-            <p className="text-xl font-black text-gray-900">Bullish</p>
-            <p className="text-sm font-bold text-orange-600 mt-1">Strong Demand</p>
+            <p className="text-xl font-black text-gray-900">
+              {crops.filter(c => c.trend === 'up').length > crops.length / 2 ? 'Bullish' : 'Neutral'}
+            </p>
+            <p className="text-sm font-bold text-orange-600 mt-1">
+              {crops.filter(c => c.trend === 'up').length} Crops Improving
+            </p>
           </div>
         </div>
       </div>

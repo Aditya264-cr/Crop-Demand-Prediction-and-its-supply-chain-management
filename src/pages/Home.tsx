@@ -4,16 +4,18 @@ import { motion } from 'motion/react';
 import { WeatherCard } from '../components/Dashboard/WeatherCard';
 import { MarketCard } from '../components/Dashboard/MarketCard';
 import { PricePredictionChart } from '../components/Dashboard/PricePredictionChart';
-import { CROPS, PRICE_HISTORY, MARKETS, WEATHER } from '../data/mockData';
+import { PRICE_HISTORY, MARKETS, WEATHER } from '../data/mockData';
 import { getAgriInsights } from '../services/geminiService';
 import { cn } from '../lib/utils';
+import { Crop } from '../types';
 
 interface HomeProps {
   onNavigate: (tab: string) => void;
   onSelectCrop: (cropId: string) => void;
+  crops: Crop[];
 }
 
-export const Home: React.FC<HomeProps> = ({ onNavigate, onSelectCrop }) => {
+export const Home: React.FC<HomeProps> = ({ onNavigate, onSelectCrop, crops }) => {
   const [aiInsight, setAiInsight] = useState<{
     summary: string;
     weatherFactor: string;
@@ -28,7 +30,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onSelectCrop }) => {
 
   useEffect(() => {
     const fetchInsight = async () => {
-      const insight = await getAgriInsights(`Weather is ${WEATHER.condition}, ${WEATHER.temp}C. Top crop is Wheat at ${CROPS[0].currentPrice}.`);
+      const insight = await getAgriInsights(`Weather is ${WEATHER.condition}, ${WEATHER.temp}C. Top crop is ${crops[0].name} at ₹${crops[0].currentPrice}.`);
       setAiInsight(insight);
     };
     fetchInsight();
@@ -76,10 +78,10 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onSelectCrop }) => {
                 AgriSense AI Recommendation
               </div>
               <p className="text-lg font-bold text-gray-800 leading-relaxed">
-                "{aiInsight.summary}"
+                &quot;{String(aiInsight.summary)}&quot;
               </p>
               <p className="text-xs text-green-600 font-bold mt-2 flex items-center gap-1">
-                <ArrowRight size={12} /> {aiInsight.actionableTip}
+                <ArrowRight size={12} /> {String(aiInsight.actionableTip)}
               </p>
             </div>
           </div>
@@ -121,7 +123,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onSelectCrop }) => {
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {CROPS.slice(0, 4).map((crop) => (
+              {crops.slice(0, 4).map((crop) => (
                 <MarketCard key={crop.id} crop={crop} onClick={() => onSelectCrop(crop.id)} />
               ))}
             </div>

@@ -18,11 +18,13 @@ export const CropDetail: React.FC<CropDetailProps> = ({ cropId, onBack }) => {
   const [aiInsight, setAiInsight] = useState<{
     summary: string;
     weatherFactor: string;
+    weatherAlert: string;
     demandFactor: string;
     actionableTip: string;
   }>({
     summary: "Analyzing crop specific data...",
     weatherFactor: "Checking weather patterns...",
+    weatherAlert: "Scanning for alerts...",
     demandFactor: "Evaluating market demand...",
     actionableTip: "Please wait..."
   });
@@ -113,18 +115,31 @@ export const CropDetail: React.FC<CropDetailProps> = ({ cropId, onBack }) => {
               <div className="space-y-6">
                 <div>
                   <p className="text-xl font-bold text-gray-900 leading-tight mb-2">
-                    {aiInsight.summary}
+                    {String(aiInsight.summary)}
                   </p>
                   <div className="h-1 w-20 bg-green-500 rounded-full"></div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {aiInsight.weatherAlert && aiInsight.weatherAlert !== 'None' && (
+                    <div className="md:col-span-2 bg-red-50 p-5 rounded-2xl border border-red-100 flex items-start gap-4 animate-pulse">
+                      <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-red-600 shrink-0">
+                        <AlertTriangle size={20} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-red-700 uppercase tracking-widest mb-1">Weather Alert</p>
+                        <p className="text-sm text-red-900 font-bold leading-relaxed">
+                          {String(aiInsight.weatherAlert)}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                   <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
                     <p className="text-[10px] font-black text-blue-700 uppercase tracking-widest mb-2 flex items-center gap-2">
                       <CloudSun size={14} /> Weather Influence
                     </p>
                     <p className="text-sm text-gray-700 font-medium leading-relaxed">
-                      {aiInsight.weatherFactor}
+                      {String(aiInsight.weatherFactor)}
                     </p>
                   </div>
                   <div className="bg-orange-50/50 p-4 rounded-2xl border border-orange-100">
@@ -132,7 +147,7 @@ export const CropDetail: React.FC<CropDetailProps> = ({ cropId, onBack }) => {
                       <TrendingUp size={14} /> Demand Dynamics
                     </p>
                     <p className="text-sm text-gray-700 font-medium leading-relaxed">
-                      {aiInsight.demandFactor}
+                      {String(aiInsight.demandFactor)}
                     </p>
                   </div>
                 </div>
@@ -140,7 +155,7 @@ export const CropDetail: React.FC<CropDetailProps> = ({ cropId, onBack }) => {
                 <div className="bg-green-600 p-5 rounded-2xl text-white shadow-lg shadow-green-100">
                   <p className="text-[10px] font-black text-green-100 uppercase tracking-widest mb-1">Actionable Strategy</p>
                   <p className="text-lg font-bold">
-                    {aiInsight.actionableTip}
+                    {String(aiInsight.actionableTip)}
                   </p>
                 </div>
               </div>

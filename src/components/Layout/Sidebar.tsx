@@ -1,10 +1,13 @@
 import React from 'react';
 import { LayoutDashboard, TrendingUp, CloudSun, Truck, BookOpen, Settings, LogOut } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { User as FirebaseUser, signOut } from 'firebase/auth';
+import { auth } from '../../lib/firebase';
 
 interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  user: FirebaseUser | null;
 }
 
 const menuItems = [
@@ -49,6 +52,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
         <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all">
           <Settings size={20} />
           Settings
+        </button>
+        <button 
+          onClick={() => signOut(auth)}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-all"
+        >
+          <LogOut size={20} />
+          Log Out
         </button>
       </div>
     </aside>

@@ -19,9 +19,9 @@ export const PRICE_HISTORY: PriceHistory[] = [
 ];
 
 export const MARKETS: Market[] = [
-  { id: 'm1', name: 'Pimpalgaon Mandi', distance: 12, location: 'Nashik', cropPrices: { 'Wheat': 2250, 'Rice': 4100 }, gain: 120, coordinates: { x: 35, y: 45 } },
-  { id: 'm2', name: 'Nashik APMC', distance: 18, location: 'Nashik', cropPrices: { 'Wheat': 2190, 'Rice': 4250 }, gain: 60, coordinates: { x: 55, y: 30 } },
-  { id: 'm3', name: 'Lasalgaon Market', distance: 42, location: 'Lasalgaon', cropPrices: { 'Wheat': 2100, 'Rice': 4000 }, gain: -30, coordinates: { x: 75, y: 65 } },
+  { id: 'm1', name: 'Pimpalgaon Mandi', distance: 12, location: 'Nashik', cropPrices: { 'Wheat': 2250, 'Rice': 4100 }, gain: 120, coordinates: { x: 35, y: 45, lat: 20.1667, lng: 73.9833 } },
+  { id: 'm2', name: 'Nashik APMC', distance: 18, location: 'Nashik', cropPrices: { 'Wheat': 2190, 'Rice': 4250 }, gain: 60, coordinates: { x: 55, y: 30, lat: 19.9975, lng: 73.7898 } },
+  { id: 'm3', name: 'Lasalgaon Market', distance: 42, location: 'Lasalgaon', cropPrices: { 'Wheat': 2100, 'Rice': 4000 }, gain: -30, coordinates: { x: 75, y: 65, lat: 20.1333, lng: 74.2333 } },
 ];
 
 export const WEATHER: WeatherData = {

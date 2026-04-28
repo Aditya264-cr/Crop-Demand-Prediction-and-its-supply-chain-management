@@ -37,7 +37,7 @@ export const PricePredictionChart: React.FC<PricePredictionChartProps> = ({ data
 
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 20, right: 40, left: 10, bottom: 10 }}>
             <defs>
               <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#16a34a" stopOpacity={0.15}/>
@@ -56,7 +56,25 @@ export const PricePredictionChart: React.FC<PricePredictionChartProps> = ({ data
               tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 600 }}
               dy={10}
             />
-            <YAxis hide domain={['auto', 'auto']} />
+            <YAxis 
+              yAxisId="left"
+              hide={false}
+              domain={['auto', 'auto']} 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: '#16a34a', fontSize: 10, fontWeight: 700 }}
+              label={{ value: 'Price (₹)', angle: -90, position: 'insideLeft', fill: '#16a34a', fontSize: 10, fontWeight: 800, offset: 10 }}
+            />
+            <YAxis 
+              yAxisId="right"
+              orientation="right"
+              hide={false}
+              domain={[0, 100]} 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: '#3b82f6', fontSize: 10, fontWeight: 700 }}
+              label={{ value: 'Demand %', angle: 90, position: 'insideRight', fill: '#3b82f6', fontSize: 10, fontWeight: 800, offset: 10 }}
+            />
             <Tooltip 
               contentStyle={{ 
                 borderRadius: '16px', 
@@ -68,16 +86,18 @@ export const PricePredictionChart: React.FC<PricePredictionChartProps> = ({ data
               labelStyle={{ fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}
               formatter={(value: any, name: string, props: any) => {
                 if (name === 'demand') {
-                  const { demandRangeLow, demandRangeHigh } = props.payload;
-                  return [`${value} (Range: ${demandRangeLow}-${demandRangeHigh})`, 'Demand'];
+                  const dataItem = props.payload;
+                  return [`${value}% (Range: ${dataItem.demandRangeLow}-${dataItem.demandRangeHigh})`, 'Demand'];
                 }
                 if (name === 'price') return [`₹${value}`, 'Price'];
                 return [value, name];
               }}
             />
             <Area 
+              yAxisId="left"
               type="monotone" 
               dataKey="price" 
+              name="price"
               stroke="#16a34a" 
               fillOpacity={1} 
               fill="url(#colorPrice)" 
@@ -85,16 +105,20 @@ export const PricePredictionChart: React.FC<PricePredictionChartProps> = ({ data
               animationDuration={1500}
             />
             <Area
+              yAxisId="right"
               type="monotone"
-              dataKey={(d: any) => [d.demandRangeLow, d.demandRangeHigh]}
+              name="demandRange"
               stroke="none"
               fill="#3b82f6"
-              fillOpacity={0.1}
+              fillOpacity={0.05}
+              dataKey={(d: any) => [d.demandRangeLow, d.demandRangeHigh]}
               animationDuration={2000}
             />
             <Area 
+              yAxisId="right"
               type="monotone" 
               dataKey="demand" 
+              name="demand"
               stroke="#3b82f6" 
               fillOpacity={1} 
               fill="url(#colorDemand)" 

@@ -1,7 +1,12 @@
 import React from 'react';
 import { Search, Bell, User, MapPin } from 'lucide-react';
+import { User as FirebaseUser } from 'firebase/auth';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  user: FirebaseUser | null;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ user }) => {
   return (
     <header className="h-16 bg-white border-b border-gray-100 px-8 flex items-center justify-between sticky top-0 z-10">
       <div className="flex items-center gap-4 flex-1 max-w-xl">
@@ -25,6 +30,20 @@ export const Navbar: React.FC = () => {
           <Bell size={20} />
           <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
         </button>
+
+        <div className="flex items-center gap-3 pl-4 border-l border-gray-100">
+          <div className="text-right hidden sm:block">
+            <p className="text-xs font-black text-gray-900 leading-none">{user?.displayName}</p>
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter mt-1">Premium Farmer</p>
+          </div>
+          {user?.photoURL ? (
+            <img src={user.photoURL} alt={user.displayName || ''} className="w-8 h-8 rounded-lg border border-gray-100" referrerPolicy="no-referrer" />
+          ) : (
+            <div className="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center">
+              <User size={18} />
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

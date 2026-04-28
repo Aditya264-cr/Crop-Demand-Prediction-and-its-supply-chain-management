@@ -1,5 +1,6 @@
 import React from 'react';
-import { BookOpen, Lightbulb, GraduationCap, ArrowRight } from 'lucide-react';
+import { BookOpen, Lightbulb, GraduationCap, ArrowRight, Bot } from 'lucide-react';
+import { AgroMindChat } from '../components/KnowledgeHub/AgroMindChat';
 
 const tips = [
   {
@@ -69,6 +70,28 @@ export const KnowledgeHub: React.FC<KnowledgeHubProps> = ({ onNavigate }) => {
           </button>
         </div>
       </div>
+
+      {/* AI Assistant Hook */}
+      <div className="bg-white p-8 rounded-[40px] border border-gray-100 flex flex-col md:flex-row items-center gap-8 shadow-sm">
+        <div className="w-20 h-20 bg-green-50 rounded-3xl flex items-center justify-center text-green-600 shrink-0">
+          <Bot size={40} />
+        </div>
+        <div className="flex-1 text-center md:text-left space-y-2">
+          <h3 className="text-2xl font-black text-gray-900">Talk to AgroMind</h3>
+          <p className="text-gray-500 font-medium">Your personal AI expert for crops, market trends, and government schemes.</p>
+        </div>
+        <button 
+          className="px-8 py-4 bg-gray-900 text-white rounded-2xl font-black shadow-xl hover:bg-black transition-all flex items-center gap-2"
+          onClick={() => {
+            // The chat is already visible or will be toggled by this potentially
+            // For now it's always visible as a floating component in this page
+          }}
+        >
+          Ask Question
+        </button>
+      </div>
+
+      <AgroMindChat />
     </div>
   );
 };
